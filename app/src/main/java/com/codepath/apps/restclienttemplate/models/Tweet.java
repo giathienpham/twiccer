@@ -152,6 +152,7 @@ public class Tweet extends BaseModel {
     }
 
     public void setTimestamp(String timestamp) {
+        timestamp = getRelativeTimeAgo(timestamp);
         this.timestamp = timestamp;
     }
 

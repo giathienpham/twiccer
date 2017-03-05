@@ -28,6 +28,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,9 +44,9 @@ public class TweetAdapter extends
         RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Tweet> tweets;
+    private ArrayList<Tweet> tweets;
 
-    public TweetAdapter(Context context, List<Tweet> tweets) {
+    public TweetAdapter(Context context, ArrayList<Tweet> tweets) {
         this.tweets = tweets;
         mContext = context;
     }
@@ -67,13 +68,22 @@ public class TweetAdapter extends
         }
     }
 
-    public void refreshData(List<Tweet> tweets) {
+    public void refreshData(ArrayList<Tweet> tweets) {
         this.tweets = tweets;
         notifyDataSetChanged();
     }
-    public void addData(List<Tweet> tweets, int page) {
+    public void addData(ArrayList<Tweet> tweets) {
         this.tweets.addAll(tweets);
-        notifyItemInserted(page);
+        notifyDataSetChanged();
+    }
+    public void addDataFirst(Tweet tweet) {
+        this.tweets.add(0, tweet);
+        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        this.tweets.clear();
+        notifyDataSetChanged();
     }
 
     @Override
