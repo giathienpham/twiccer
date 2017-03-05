@@ -266,7 +266,7 @@ RestClient client = RestApplication.getRestClient();
 client.clearAccessToken();
 ```
 
-### Troubleshooting
+### Troubleshootings
 
 * If you receive the following error `org.scribe.exceptions.OAuthException: Cannot send unauthenticated requests for TwitterApi client. Please attach an access token!` then check the following:
  * Is your intent-filter with `<data>` attached to the `LoginActivity`? If not, make sure that the `LoginActivity` receives the request after OAuth authorization.
