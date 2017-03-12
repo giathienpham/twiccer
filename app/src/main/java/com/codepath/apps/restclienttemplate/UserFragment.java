@@ -29,10 +29,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserFragment extends Fragment {
 
+    private static String USER_ID = "4798788372";
     public static final String ARG_PAGE = "ARG_PAGE";
-    private static String CURRENT_LOGON_USERNAME = "Phạm Gia Thiện";
-    private static String CURRENT_LOGON_USERAVT = "https://pbs.twimg.com/profile_images/690568049368260609/E61BXIdR_200x200.jpg";
-    private static String CURRENT_LOGON_AT = "@giathienpham";
 
     private int mPage;
 
@@ -44,6 +42,7 @@ public class UserFragment extends Fragment {
     int page = 1;
     private SwipeRefreshLayout swipeContainer;
     private static UserFragment sharedInstance;
+    private static String userId = "";
 
     public static UserFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -72,6 +71,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
+        userId = UserActivity.newInstance().getUserId();
 
         mContext = this.getContext();
 
@@ -85,9 +85,8 @@ public class UserFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                page = 1;
                 scrollListener.resetState();
-                updateHomeTimeline(1);
+                updateHomeTimeline(userId);
             }
         });
         // Configure the refreshing colors
@@ -96,7 +95,7 @@ public class UserFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        getUserTimeLine();
+        getUserTimeLine(userId);
 
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -105,20 +104,20 @@ public class UserFragment extends Fragment {
                 loadNextDataFromApi(page);
             }
         };
-        // Adds the scroll listener to RecyclerView
-        rvTweets.addOnScrollListener(scrollListener);
+//         Adds the scroll listener to RecyclerView
+       // rvTweets.addOnScrollListener(scrollListener);
         return view;
     }
 
     public void loadNextDataFromApi(int offset) {
         page = offset;
-        getUserTimeLine();
+        getUserTimeLine(USER_ID);
         System.out.println("offset" + offset);
     }
 
-    private void getUserTimeLine(){
+    private void getUserTimeLine(String userId){
         RestClient client = RestApplication.getRestClient();
-        client.getUserTimeLine(new JsonHttpResponseHandler() {
+        client.getUserTimeLine(userId, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
                 swipeContainer.setRefreshing(false);
                 try {
@@ -134,9 +133,9 @@ public class UserFragment extends Fragment {
         });
     }
 
-    private void updateHomeTimeline(int page){
+    private void updateHomeTimeline(String userId){
         RestClient client = RestApplication.getRestClient();
-        client.getUserTimeLine(new JsonHttpResponseHandler() {
+        client.getUserTimeLine(userId, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
                 swipeContainer.setRefreshing(false);
                 try {

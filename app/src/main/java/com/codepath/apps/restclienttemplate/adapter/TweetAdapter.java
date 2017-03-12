@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
@@ -21,10 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.codepath.apps.restclienttemplate.HomeActivity;
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.UserActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -55,7 +59,7 @@ public class TweetAdapter extends
         return mContext;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.ivUserAvt) ImageView userAvatar;
         @BindView(R.id.tvUsername) TextView userName;
         @BindView(R.id.tvTweetBody) TextView tweetBody;
@@ -65,6 +69,23 @@ public class TweetAdapter extends
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            userAvatar.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition(); // gets item position
+            if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
+                Tweet tweet = tweets.get(position);
+                // We can access the data within the views
+                Intent i = new Intent(mContext, UserActivity.class);
+                i.putExtra("user_id", tweet.getUserId());
+                i.putExtra("user_avt", tweet.getUserAvt());
+                i.putExtra("user_name", tweet.getUserHandle());
+
+                mContext.startActivity(i);
+            }
         }
     }
 
@@ -118,18 +139,11 @@ public class TweetAdapter extends
         }else {
             viewHolder.tweetImage.setVisibility(View.VISIBLE);
             loadImageToView(tweet.getImgUrl(), viewHolder.tweetImage);
-
-//            if (!tweet.getGif().equals("nogif")){
-//                Log.d("gif", tweet.getGif());
-//                loadImageToView(tweet.getGif(), viewHolder.tweetImage);
-//            }
         }
 
 
 
         loadAvatarToView(tweet.getUserAvt(), viewHolder.userAvatar);
-
-
 
     }
 
@@ -139,13 +153,6 @@ public class TweetAdapter extends
     }
 
     private void loadImageToView(String imageUrl, ImageView view){
-//        Glide.with(mContext)
-//                .load(imageUrl)
-//                .skipMemoryCache( true )
-//                .fitCenter()
-//                .placeholder(R.drawable.loading2)
-//                .crossFade()
-//                .into(view);
 
         Picasso.with(mContext)
                 .load(imageUrl)
@@ -155,14 +162,6 @@ public class TweetAdapter extends
     }
 
     private void loadAvatarToView(String imageUrl, ImageView view){
-//        Glide.with(mContext)
-//                .load(imageUrl)
-//                .skipMemoryCache(true)
-//                .fitCenter()
-//                .placeholder(R.drawable.loading2)
-//                .crossFade()
-//                .into(view);
-
         Glide.with(mContext).load(imageUrl).asBitmap().skipMemoryCache(true).centerCrop().into(new BitmapImageViewTarget(view) {
             @Override
             protected void setResource(Bitmap resource) {

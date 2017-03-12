@@ -34,6 +34,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class HomeActivity extends AppCompatActivity implements NewTweetFragment.NewTweetFragmentListener {
 
+    private static String USER_ID = "4798788372";
     private static String CURRENT_LOGON_USERNAME = "Phạm Gia Thiện";
     private static String CURRENT_LOGON_USERAVT = "https://pbs.twimg.com/profile_images/690568049368260609/E61BXIdR_200x200.jpg";
     private static String CURRENT_LOGON_AT = "@giathienpham";
@@ -71,7 +72,7 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        getUserInfo();
+        getUserInfo(USER_ID);
 
     }
 
@@ -92,6 +93,7 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
             case R.id.mnProfile:
 //                showEditDialog();
                 Intent i = new Intent(this, UserActivity.class);
+                i.putExtra("user_id", USER_ID);
                 startActivity(i);
 
                 return true;
@@ -109,18 +111,11 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
     }
 
 
-    private void getUserInfo(){
+    private void getUserInfo(String userId){
         RestClient client = RestApplication.getRestClient();
-        client.getUserInformation(new JsonHttpResponseHandler() {
+        client.getUserInformation(userId, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject jsonUser) {
-//                try {
-                    LoggedOnUser user = new LoggedOnUser(jsonUser);
-                    System.out.println(user.toString());
-//                    ArrayList<Tweet> tweets = Tweet.fromJson(jsonArray);
-//                    rvAdapter.addData(tweets);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
+                LoggedOnUser user = new LoggedOnUser(jsonUser);
             }
             public void onFailure(int statusCode, Header[] headers, Throwable t , JSONObject jsonObject){
                 Log.d("Error", t.toString());

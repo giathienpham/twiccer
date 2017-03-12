@@ -12,6 +12,8 @@ public class LoggedOnUser {
     private String username;
     private String follower;
     private String following;
+    private String avatar;
+    private String at;
 
 
 
@@ -23,6 +25,8 @@ public class LoggedOnUser {
             this.username = object.getString("name");
             this.follower = object.getString("followers_count");
             this.following = object.getString("friends_count");
+            this.avatar = object.getString("profile_image_url");
+            this.at = object.getString("screen_name");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -70,6 +74,22 @@ public class LoggedOnUser {
 
     public void setFollowing(String following) {
         this.following = following;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAt() {
+        return at;
+    }
+
+    public void setAt(String at) {
+        this.at = at;
     }
 
     public LoggedOnUser(String username, String follower, String following) {

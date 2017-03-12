@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.adapter.TimelineFragmentPagerAdapter;
 import com.codepath.apps.restclienttemplate.adapter.UserFragmentPagerAdapter;
@@ -32,6 +34,15 @@ public class UserActivity extends AppCompatActivity {
     private static String CURRENT_LOGON_AT = "@giathienpham";
 
     Context mContext;
+    String userId = "";
+    String username;
+    String userAvt;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    private static UserActivity sharedInstance;
 
     @BindView(R.id.ivProfileAvt)
     ImageView profileAvt;
@@ -46,6 +57,10 @@ public class UserActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    public static UserActivity newInstance() {
+        return sharedInstance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +71,13 @@ public class UserActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.drawable.logo2);
 
         mContext = this;
-        getUserInfo();
+        sharedInstance = this;
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("user_id");
+        CURRENT_LOGON_USERNAME = intent.getStringExtra("user_avt");
+        CURRENT_LOGON_USERAVT = intent.getStringExtra("user_name");
+        getUserInfo(userId);
+
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -76,7 +97,6 @@ public class UserActivity extends AppCompatActivity {
                 showEditDialog();
                 return true;
             case R.id.mnProfile:
-//                showEditDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,17 +111,16 @@ public class UserActivity extends AppCompatActivity {
         newTweetFragment.show(fm, "fragment_new_tweet");
     }
 
-    private void getUserInfo(){
+    private void getUserInfo(String userId){
         RestClient client = RestApplication.getRestClient();
-        client.getUserInformation(new JsonHttpResponseHandler() {
+        client.getUserInformation(userId, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject jsonUser) {
                 LoggedOnUser user = new LoggedOnUser(jsonUser);
                 profileUsername.setText(user.getUsername());
-                profileAt.setText(CURRENT_LOGON_AT);
-                Picasso.with(mContext).load(CURRENT_LOGON_USERAVT).into(profileAvt);
+                profileAt.setText("@" +user.getAt().toLowerCase());
                 follower.setText(user.getFollower());
                 following.setText(user.getFollowing());
-                System.out.println(user.toString());
+                Picasso.with(mContext).load(user.getAvatar()).into(profileAvt);
             }
             public void onFailure(int statusCode, Header[] headers, Throwable t , JSONObject jsonObject){
                 Log.d("Error", t.toString());
