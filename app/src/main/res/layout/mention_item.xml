@@ -67,7 +67,7 @@
                                     android:text="tvUsername"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/pink"
                                     />
 
                                 <TextView
@@ -76,7 +76,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="right"
                                     android:text="9h Ago"
-                                    android:textColor="@color/black"/>
+                                    android:textColor="@color/pink"/>
 
 
                             </LinearLayout>
@@ -87,7 +87,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="body"
-                                android:textColor="@color/black"
+                                android:textColor="@color/heavy_pink"
                                 />
                         </LinearLayout>
 

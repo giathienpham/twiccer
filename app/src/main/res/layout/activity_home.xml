@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/light_pink"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -23,8 +24,8 @@
         app:tabMaxWidth="0dp"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabTextColor="@color/pink"
-        app:tabSelectedTextColor="@color/pink"
+        app:tabTextColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
         app:tabIndicatorColor="@color/pink"
         />
 
@@ -33,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:background="@color/very_light_pink" />
 
     <!--<android.support.v4.widget.SwipeRefreshLayout-->
         <!--xmlns:android="http://schemas.android.com/apk/res/android"-->

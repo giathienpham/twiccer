@@ -3,6 +3,9 @@
 
     <color name="white">#fffefe</color>
     <color name="pink">#f986c5</color>
+    <color name="very_light_pink">#f9d4e8</color>
+    <color name="light_pink">#f7aad4</color>
+    <color name="heavy_pink">#843d64</color>
     <color name="black">#080808</color>
     <color name="gray">#868181</color>
 </resources>

@@ -29,14 +29,15 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserActivity extends AppCompatActivity {
 
-    private static String CURRENT_LOGON_USERNAME = "Phạm Gia Thiện";
-    private static String CURRENT_LOGON_USERAVT = "https://pbs.twimg.com/profile_images/690568049368260609/E61BXIdR_200x200.jpg";
-    private static String CURRENT_LOGON_AT = "@giathienpham";
+    private static String CURRENT_LOGON_USERNAME;
+    private static String CURRENT_LOGON_USERAVT;
+    private static String CURRENT_LOGON_AT;
 
     Context mContext;
     String userId = "";
     String username;
     String userAvt;
+    private LoggedOnUser user;
 
     public String getUserId() {
         return userId;
@@ -115,12 +116,16 @@ public class UserActivity extends AppCompatActivity {
         RestClient client = RestApplication.getRestClient();
         client.getUserInformation(userId, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject jsonUser) {
-                LoggedOnUser user = new LoggedOnUser(jsonUser);
-                profileUsername.setText(user.getUsername());
-                profileAt.setText("@" +user.getAt().toLowerCase());
+                user = new LoggedOnUser(jsonUser);
+                CURRENT_LOGON_USERNAME = user.getUsername();
+                CURRENT_LOGON_AT = "@" + user.getAt();
+                CURRENT_LOGON_USERAVT = user.getAvatar();
+
+                profileUsername.setText(CURRENT_LOGON_USERNAME);
+                profileAt.setText(CURRENT_LOGON_AT);
                 follower.setText(user.getFollower());
                 following.setText(user.getFollowing());
-                Picasso.with(mContext).load(user.getAvatar()).into(profileAvt);
+                Picasso.with(mContext).load(CURRENT_LOGON_USERAVT).into(profileAvt);
             }
             public void onFailure(int statusCode, Header[] headers, Throwable t , JSONObject jsonObject){
                 Log.d("Error", t.toString());

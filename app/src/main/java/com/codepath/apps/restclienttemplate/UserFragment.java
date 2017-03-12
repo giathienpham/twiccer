@@ -29,7 +29,6 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserFragment extends Fragment {
 
-    private static String USER_ID = "4798788372";
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private int mPage;
@@ -111,7 +110,7 @@ public class UserFragment extends Fragment {
 
     public void loadNextDataFromApi(int offset) {
         page = offset;
-        getUserTimeLine(USER_ID);
+        getUserTimeLine(userId);
         System.out.println("offset" + offset);
     }
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.codepath.apps.restclienttemplate.adapter.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.adapter.TweetAdapter;
+import com.codepath.apps.restclienttemplate.models.LoggedOnUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -30,9 +31,6 @@ import cz.msebera.android.httpclient.Header;
 public class TimelineFragment extends Fragment implements NewTweetFragment.NewTweetFragmentListener {
 
     public static final String ARG_PAGE = "ARG_PAGE";
-    private static String CURRENT_LOGON_USERNAME = "Phạm Gia Thiện";
-    private static String CURRENT_LOGON_USERAVT = "https://pbs.twimg.com/profile_images/690568049368260609/E61BXIdR_200x200.jpg";
-    private static String CURRENT_LOGON_AT = "@giathienpham";
 
     private int mPage;
 
@@ -44,6 +42,7 @@ public class TimelineFragment extends Fragment implements NewTweetFragment.NewTw
     int page = 1;
     private SwipeRefreshLayout swipeContainer;
     private static TimelineFragment sharedInstance;
+    private LoggedOnUser user;
 
     public static TimelineFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -97,6 +96,7 @@ public class TimelineFragment extends Fragment implements NewTweetFragment.NewTw
                 android.R.color.holo_red_light);
 
         getHomeLine(page);
+        getCurrentLoggedOnUser();
 
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -152,14 +152,27 @@ public class TimelineFragment extends Fragment implements NewTweetFragment.NewTw
         });
     }
 
+    private void getCurrentLoggedOnUser() {
+        RestClient client = RestApplication.getRestClient();
+        client.getCurrentLoggedOnUser(new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonUser) {
+                user = new LoggedOnUser(jsonUser);
+            }
+
+            public void onFailure(int statusCode, Header[] headers, Throwable t, JSONObject jsonObject) {
+                Log.d("Error", t.toString());
+            }
+        });
+    }
+
     @Override
     public void onFinishNewTweetFragmentDialog(String body, String time) {
         Tweet tweet = new Tweet();
         tweet.setBody(body);
         tweet.setTimestamp(time);
         tweet.setId((long) Math.random() * 212 * ((long)Math.random()* 232 * ((long)Math.random() * 121)));
-        tweet.setUserAvt(CURRENT_LOGON_USERAVT);
-        tweet.setUserHandle(CURRENT_LOGON_USERNAME);
+        tweet.setUserAvt(user.getAvatar());
+        tweet.setUserHandle(user.getUsername());
         tweet.setGif("nogif");
         tweet.setImgUrl("noimage");
         rvAdapter.addDataFirst(tweet);
