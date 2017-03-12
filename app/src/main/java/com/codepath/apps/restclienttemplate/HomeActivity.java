@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -90,6 +91,9 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
                 return true;
             case R.id.mnProfile:
 //                showEditDialog();
+                Intent i = new Intent(this, UserActivity.class);
+                startActivity(i);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

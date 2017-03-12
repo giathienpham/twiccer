@@ -10,7 +10,7 @@
         android:id="@+id/rlNewTweetHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cyan">
+        android:background="@color/pink">
 
         <ImageView
             android:id="@+id/btnCloseNewTweet"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/ivNewTweetUserAvt"
-            android:textColor="@color/gray"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginRight="10dp"/>
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/ivNewTweetUserAvt"
             android:layout_below="@+id/lblUsername"
-            android:textColor="@color/gray"
+            android:textColor="@color/white"
             android:textSize="13sp"
             android:layout_marginRight="10dp"/>
 
@@ -71,7 +71,7 @@
             android:layout_height="match_parent"
             android:inputType="textMultiLine"
             android:gravity="top"
-            android:backgroundTint="@color/cyan"
+            android:backgroundTint="@color/pink"
             android:textColor="@color/black"
             android:hint="What's happening?"
             android:maxLength="140"
@@ -106,8 +106,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="20dp"
-            android:textColor="@color/gray"
-            android:background="@color/cyan"
+            android:textColor="@color/white"
+            android:background="@color/pink"
             android:text="TWEET"/>
 
     </RelativeLayout>

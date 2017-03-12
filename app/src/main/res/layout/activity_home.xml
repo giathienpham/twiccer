@@ -11,8 +11,8 @@
         android:minHeight="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@color/gray"
-        android:background="@color/cyan">
+        app:titleTextColor="@color/white"
+        android:background="@color/pink">
     </android.support.v7.widget.Toolbar>
 
 
@@ -23,9 +23,9 @@
         app:tabMaxWidth="0dp"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabTextColor="@color/cyan"
-        app:tabSelectedTextColor="@color/cyan"
-        app:tabIndicatorColor="@color/cyan"
+        app:tabTextColor="@color/pink"
+        app:tabSelectedTextColor="@color/pink"
+        app:tabIndicatorColor="@color/pink"
         />
 
     <android.support.v4.view.ViewPager
