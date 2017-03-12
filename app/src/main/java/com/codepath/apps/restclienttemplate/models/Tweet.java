@@ -69,13 +69,13 @@ public class Tweet extends BaseModel {
                 this.gif = "nogif";
             }
 
-
-            Log.d("USerid = ", this.userId);
-            Log.d("username = ", this.userHandle);
-            Log.d("createdat = ", this.timestamp);
-            Log.d("body = ", this.body);
-            Log.d("imgUrl = ", this.imgUrl);
-            Log.d("imgUrl = ", this.gif);
+//
+//            Log.d("USerid = ", this.userId);
+//            Log.d("username = ", this.userHandle);
+//            Log.d("createdat = ", this.timestamp);
+//            Log.d("body = ", this.body);
+//            Log.d("imgUrl = ", this.imgUrl);
+//            Log.d("imgUrl = ", this.gif);
 
         } catch (JSONException e) {
             e.printStackTrace();

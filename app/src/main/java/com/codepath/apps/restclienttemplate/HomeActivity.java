@@ -3,31 +3,30 @@ package com.codepath.apps.restclienttemplate;
 
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.adapter.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.adapter.TweetAdapter;
+import com.codepath.apps.restclienttemplate.adapter.TimelineFragmentPagerAdapter;
+import com.codepath.apps.restclienttemplate.models.LoggedOnUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -61,46 +60,17 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
 
         mContext = this;
 
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
+        TimelineFragmentPagerAdapter pagerAdapter =
+                new TimelineFragmentPagerAdapter(getSupportFragmentManager(), HomeActivity.this);
+        viewPager.setAdapter(pagerAdapter);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
-
-        rvTweets = (RecyclerView) findViewById(R.id.rvTweets);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        rvTweets.setLayoutManager(layoutManager);
-        rvAdapter = new TweetAdapter(mContext, tweets);
-        rvTweets.setAdapter(rvAdapter);
-
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                page = 1;
-                rvAdapter.clearData();
-                scrollListener.resetState();
-                getHomeLine(1);
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        getHomeLine(page);
-
-
-        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                loadNextDataFromApi(page);
-            }
-        };
-        // Adds the scroll listener to RecyclerView
-        rvTweets.addOnScrollListener(scrollListener);
+        getUserInfo();
 
     }
 
@@ -118,6 +88,9 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
             case R.id.mnNewTweet:
                 showEditDialog();
                 return true;
+            case R.id.mnProfile:
+//                showEditDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -131,29 +104,27 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
         newTweetFragment.show(fm, "fragment_new_tweet");
     }
 
-    public void loadNextDataFromApi(int offset) {
-        page = offset;
-        getHomeLine(offset);
-        System.out.println("offset" + offset);
-    }
 
-    private void getHomeLine(int page){
+    private void getUserInfo(){
         RestClient client = RestApplication.getRestClient();
-        client.getHomeTimeline(page, new JsonHttpResponseHandler() {
-            public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
-                swipeContainer.setRefreshing(false);
-                try {
-                    ArrayList<Tweet> tweets = Tweet.fromJson(jsonArray);
-                    rvAdapter.addData(tweets);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        client.getUserInformation(new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonUser) {
+//                try {
+                    LoggedOnUser user = new LoggedOnUser(jsonUser);
+                    System.out.println(user.toString());
+//                    ArrayList<Tweet> tweets = Tweet.fromJson(jsonArray);
+//                    rvAdapter.addData(tweets);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
             public void onFailure(int statusCode, Header[] headers, Throwable t , JSONObject jsonObject){
                 Log.d("Error", t.toString());
             }
         });
     }
+
+
 
     @Override
     public void onFinishNewTweetFragmentDialog(String body, String time) {
@@ -165,9 +136,7 @@ public class HomeActivity extends AppCompatActivity implements NewTweetFragment.
         tweet.setUserHandle(CURRENT_LOGON_USERNAME);
         tweet.setGif("nogif");
         tweet.setImgUrl("noimage");
-        rvAdapter.addDataFirst(tweet);
-//        tweets.add(0, tweet);
-//        Toast.makeText(this, "Hi, " + body, Toast.LENGTH_SHORT).show();
+        TimelineFragment.getSharedInstance().getRvAdapter().addDataFirst(tweet);
 
     }
 }
